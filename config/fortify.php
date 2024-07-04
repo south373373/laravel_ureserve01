@@ -145,16 +145,18 @@ return [
     */
 
     'features' => [
+        // 以下の表示・非表示をする事で
+        // Profile画面上の設定項目の表示・非表示可能。
         Features::registration(),
         Features::resetPasswords(),
         // Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
-        Features::twoFactorAuthentication([
-            'confirm' => true,
-            'confirmPassword' => true,
+        // Features::twoFactorAuthentication([
+            // 'confirm' => true,
+            // 'confirmPassword' => true,
             // 'window' => 0,
-        ]),
+        // ]),
     ],
 
 ];

@@ -13,7 +13,7 @@ class JetstreamServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Fortify::ignoreRoutes(); //Fortifyのroutingを無効化する設定。
     }
 
     /**
