@@ -31,6 +31,22 @@ Route::middleware([
 });
 
 // 追記分
+// Gate設定用
+Route::prefix('manager')
+->middleware('can:manager-higher')
+->group(function(){
+    Route::get('/index', function(){
+        dd('manager');
+    });
+});
+
+Route::middleware('can:user-higher')
+->group(function(){
+    Route::get('/index', function(){
+        dd('user');
+    });
+});
+
 // 以下の記載でまとめて記載。
 Route::controller(LivewireTestController::class)
 ->prefix('livewire-test')->name('livewire-test.')->group(function(){

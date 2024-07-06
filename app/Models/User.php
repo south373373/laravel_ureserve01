@@ -27,6 +27,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // Roleを追加
+        'role',
     ];
 
     /**
