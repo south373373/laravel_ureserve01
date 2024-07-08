@@ -36,6 +36,9 @@ Route::middleware([
 Route::prefix('manager')
 ->middleware('can:manager-higher')
 ->group(function(){
+    // 「/past」のパスが「events/{event}」のidと判定されるため、
+    // 「/past」のパスを最上位に記載。
+    Route::get('/events/past', [EventController::class, 'past'])->name('events.past');
     Route::resource('/events', EventController::class);
 });
 
