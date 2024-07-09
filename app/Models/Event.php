@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 // 追記分
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
+use App\Models\User;
 
 class Event extends Model
 {
@@ -48,5 +49,13 @@ class Event extends Model
         return new Attribute(
             get: fn() => Carbon::parse($this->end_date)->format('H時i分')
         );
+    }
+
+    // belogsToManyの第2引数は中間テーブル名を指定。
+    // withPivotで中間テーブル内の取得したい情報を指定。
+    public function users()
+    {
+        return $this->belongsToMany(Event::class, 'reservations')
+        ->withPivot('id', 'number_of_people', 'canceled_date');
     }
 }
