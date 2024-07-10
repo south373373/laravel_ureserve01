@@ -38,4 +38,25 @@ class EventService
         // 上記の「return」を記載すれば以下のreturnは不要。
         // return $dateTime;      
     }
+
+    // 2週間分の日付取得
+    public static function getWeekEvents($startDate, $endDate)
+    {
+        $reservedPeople = DB::table('reservations')
+        ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
+        // キャンセル無しはNULL、キャセル有りは日付入力
+        ->whereNull('canceled_date')
+        ->groupBy('event_id');
+        // dd($reservedPeople);
+
+        // 外部結合-join
+        return DB::table('events')
+        ->leftJoinSub($reservedPeople, 'reservedPeople', function($join){
+            $join->on('events.id', '=', 'reservedPeople.event_id');
+            })
+        ->whereBetween('start_date', [$startDate, $endDate])
+        ->orderBy('start_date', 'asc')
+        // paginateではなくある分だけ表示
+        ->get();        
+    }
 }
