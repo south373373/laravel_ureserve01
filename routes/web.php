@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivewireTestController;
 use App\Http\Controllers\AlpineTestController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ReservationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,15 +23,18 @@ Route::get('/', function () {
     return view('calendar');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+// 今回はAPI通信を使用しないため以下をコメント。
+// 
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified'
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+// });
+
 
 // 追記分
 // Gate設定用
@@ -45,9 +49,9 @@ Route::prefix('manager')
 
 Route::middleware('can:user-higher')
 ->group(function(){
-    Route::get('/index', function(){
-        dd('user');
-    });
+    Route::get('/dashboard', [ReservationController::class, 'dashboard'])->name('dashboard');
+    Route::get('/{id}', [ReservationController::class, 'detail'])->name('events.detail');
+    Route::post('/{id}', [ReservationController::class, 'reserve'])->name('events.reserve');
 });
 
 // 以下の記載でまとめて記載。
