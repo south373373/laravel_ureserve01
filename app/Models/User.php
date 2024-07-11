@@ -67,7 +67,7 @@ class User extends Authenticatable
     // リレーションの設定
     public function events()
     {
-        return $this->belongToMany(Event::class, 'reservations')
+        return $this->belongsToMany(Event::class, 'reservations')
         ->withPivot('id', 'number_of_people', 'canceled_date');
     }
 }

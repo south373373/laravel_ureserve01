@@ -8,7 +8,8 @@
         value="{{ $currentDate }}"
         wire:change="getDate($event.target.value)" />
 
-        <div class="flex border border-green-400 mx-auto">
+        <!-- <div class="flex border border-green-400 mx-auto"> -->
+        <div class="flex mx-auto">
             <x-calendar-time />
             @for($i = 0; $i < 7; $i++)
             <div class="w-32">
@@ -20,15 +21,18 @@
                             $currentWeek[$i]['checkDay'] . " " . \Constant::EVENT_TIME[$j] )))
                             
                             @php
+                                $eventId = $events->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . \Constant::EVENT_TIME[$j] )->id;
                                 $eventName = $events->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . \Constant::EVENT_TIME[$j] )->name;
                                 $eventInfo = $events->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . \Constant::EVENT_TIME[$j] );
                                 $eventPeriod = \Carbon\Carbon::parse($eventInfo->start_date)->diffInMinutes($eventInfo->end_date) / 30 - 1;
                             @endphp
 
-                            <!-- 予約があった場合、10時から20時までを繰り返し表示 -->
-                            <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">
-                                {{ $eventName }}
-                            </div>
+                            <a href="{{ route('events.detail', ['id' => $eventId ]) }}">
+                                <!-- 予約があった場合、10時から20時までを繰り返し表示 -->
+                                <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">
+                                    {{ $eventName }}
+                                </div>
+                            </a>
                             @if( $eventPeriod > 0 )
                                 @for($k = 0; $k < $eventPeriod; $k++)
                                     <div class="py-1 px-2 h-8 border border-gray-200 bg-blue-100"></div>

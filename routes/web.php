@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivewireTestController;
 use App\Http\Controllers\AlpineTestController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\MyPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,15 +24,18 @@ Route::get('/', function () {
     return view('calendar');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+// 今回はAPI通信を使用しないため以下をコメント。
+// 
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified'
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+// });
+
 
 // 追記分
 // Gate設定用
@@ -45,10 +50,19 @@ Route::prefix('manager')
 
 Route::middleware('can:user-higher')
 ->group(function(){
-    Route::get('/index', function(){
-        dd('user');
-    });
+    Route::get('/dashboard', [ReservationController::class, 'dashboard'])->name('dashboard');
+    Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
+    Route::get('/mypage/{id}', [MyPageController::class, 'show'])->name('mypage.show');
+    Route::post('/mypage/{id}', [MyPageController::class, 'cancel'])->name('mypage.cancel');
+    // Route::get('/{id}', [ReservationController::class, 'detail'])->name('events.detail');
+    Route::post('/{id}', [ReservationController::class, 'reserve'])->name('events.reserve');
 });
+
+// ログインしていない状態からのredirect設定
+// Route::middleware('auth')->get('/{id}', [ReservationController::class, 'detail'])->name('events.detail');
+
+// ログインしていない状態からでも詳細画面を表示
+Route::get('/{id}', [ReservationController::class, 'detail'])->name('events.detail');
 
 // 以下の記載でまとめて記載。
 Route::controller(LivewireTestController::class)
